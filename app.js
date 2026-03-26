@@ -4,8 +4,8 @@ const path = require("path");
 const app = express();
 
 // Configuration - update these values for your setup
-const CAPTCHACAT_API_KEY = "";
-const CAPTCHACAT_SITE_KEY = "bd1cc81b04564d3f899e"; // Just an example sitekey so the widget shows up
+const BYEBOT_API_KEY = "";
+const BYEBOT_SITE_KEY = "bd1cc81b04564d3f899e"; // Just an example sitekey so the widget shows up
 const PORT = 4242;
 
 // Middleware
@@ -16,10 +16,10 @@ app.use(express.urlencoded({ extended: true }));
 // Validate CAPTCHA token
 async function validateCaptchaToken(token) {
   try {
-    const response = await fetch("https://challenge.captchacat.com/validate_token", {
+    const response = await fetch("https://challenge.byebot.de/validate_token", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ api_key: CAPTCHACAT_API_KEY, token }),
+      body: JSON.stringify({ api_key: BYEBOT_API_KEY, token }),
     });
     if (response.ok) {
       return { valid: true };
@@ -33,17 +33,17 @@ async function validateCaptchaToken(token) {
 // Routes
 app.get("/", (req, res) => {
   res.render("index", {
-    siteKey: CAPTCHACAT_SITE_KEY,
+    siteKey: BYEBOT_SITE_KEY,
     error: null,
   });
 });
 
 app.post("/submit", async (req, res) => {
-  const { username, password, "captchacat-token": token } = req.body;
+  const { username, password, "byebot-token": token } = req.body;
 
   if (!token) {
     return res.render("index", {
-      siteKey: CAPTCHACAT_SITE_KEY,
+      siteKey: BYEBOT_SITE_KEY,
       error: "Please complete the CAPTCHA",
     });
   }
@@ -59,7 +59,7 @@ app.post("/submit", async (req, res) => {
   }
 
   res.render("index", {
-    siteKey: CAPTCHACAT_SITE_KEY,
+    siteKey: BYEBOT_SITE_KEY,
     error: `CAPTCHA validation failed: ${result.message || "Unknown error"}`,
   });
 });
